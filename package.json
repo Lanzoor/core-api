@@ -1,0 +1,17 @@
+{
+    "name": "core-api",
+    "private": true,
+    "version": "26.0.0",
+    "description": "API repository for the API side of lanzoor.dev",
+    "license": "ISC",
+    "author": "Lanzoor",
+    "type": "module",
+    "scripts": {
+        "build": "echo \"Skipping build\""
+    },
+    "dependencies": {
+        "@upstash/redis": "^1.36.2",
+        "@vercel/analytics": "^1.6.1",
+        "@vercel/node": "^5.5.33"
+    }
+}

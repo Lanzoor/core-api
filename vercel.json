@@ -1,0 +1,15 @@
+{
+    "version": 2,
+
+    "github": {
+        "silent": true
+    },
+
+    "redirects": [
+        {
+            "source": "/docs",
+            "destination": "https://lanzoor.dev/api/docs",
+            "permanent": true
+        }
+    ]
+}

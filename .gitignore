@@ -1,0 +1,9 @@
+**/node_modules
+
+.vercel
+.vscode
+
+**/.env*
+
+*.md
+!README.md
