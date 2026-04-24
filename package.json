@@ -1,17 +1,24 @@
 {
     "name": "core-api",
-    "private": true,
     "version": "26.0.0",
-    "description": "API repository for the API side of lanzoor.dev",
+    "private": true,
+    "description": "Repository for my domain lanzoor.dev",
     "license": "ISC",
     "author": "Lanzoor",
-    "type": "module",
     "scripts": {
-        "build": "echo \"Skipping build\""
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start"
     },
     "dependencies": {
-        "@upstash/redis": "^1.36.2",
-        "@vercel/analytics": "^1.6.1",
-        "@vercel/node": "^5.5.33"
+        "next": "16.2.4",
+        "react": "19.2.4",
+        "react-dom": "19.2.4"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "typescript": "^5"
     }
 }
