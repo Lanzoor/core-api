@@ -11,5 +11,10 @@
             "destination": "https://lanzoor.dev/api/docs",
             "permanent": true
         }
-    ]
+    ],
+    "functions": {
+        "api/**/*.ts": {
+            "runtime": "@vercel/node"
+        }
+    }
 }
