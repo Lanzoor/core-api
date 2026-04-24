@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
                 error: err.message,
             },
             {
-                status: 400,
+                status: 500,
                 headers: CORS_HEADERS,
             }
         );

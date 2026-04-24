@@ -1,11 +1,20 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { NextRequest, NextResponse } from 'next/server';
+
+const CORS_HEADERS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+};
 
 function degreesToCardinal(degrees: number) {
     if (typeof degrees !== 'number' || isNaN(degrees)) {
         return 'Unavailable';
     }
+
     degrees = ((degrees % 360) + 360) % 360;
+
     const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+
     const index = Math.round(degrees / 22.5) % 16;
     return directions[index];
 }
@@ -41,31 +50,43 @@ const weatherDescriptions: Record<number, string> = {
     99: 'Thunderstorm with heavy hail',
 };
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export async function OPTIONS() {
+    return new NextResponse(null, {
+        status: 200,
+        headers: CORS_HEADERS,
+    });
+}
 
-    if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
-    }
-
+export async function GET(req: NextRequest) {
     try {
-        console.log('Ping invoked!', { method: req.method, url: req.url });
+        console.log('Weather route invoked!', {
+            method: req.method,
+            url: req.url,
+        });
 
         const ipRes = await fetch('http://ip-api.com/json/');
-        if (!ipRes.ok) throw new Error(`IP API error: ${ipRes.status}`);
+
+        if (!ipRes.ok) {
+            throw new Error(`IP API error: ${ipRes.status}`);
+        }
+
         const ipData = await ipRes.json();
         const latitude = parseFloat(ipData.lat);
         const longitude = parseFloat(ipData.lon);
 
-        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weathercode,wind_speed_10m,wind_direction_10m,relative_humidity_2m&timezone=auto`;
-        const airUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${latitude}&longitude=${longitude}&current=pm10,pm2_5&timezone=auto`;
+        const weatherUrl = `https://api.open-meteo.com/v1/forecast` + `?latitude=${latitude}` + `&longitude=${longitude}` + `&current=temperature_2m,weathercode,wind_speed_10m,wind_direction_10m,relative_humidity_2m` + `&timezone=auto`;
+
+        const airUrl = `https://air-quality-api.open-meteo.com/v1/air-quality` + `?latitude=${latitude}` + `&longitude=${longitude}` + `&current=pm10,pm2_5` + `&timezone=auto`;
 
         const [weatherRes, airRes] = await Promise.all([fetch(weatherUrl), fetch(airUrl)]);
-        if (!weatherRes.ok) throw new Error(`Weather API error: ${weatherRes.status}`);
-        if (!airRes.ok) throw new Error(`Air API error: ${airRes.status}`);
+
+        if (!weatherRes.ok) {
+            throw new Error(`Weather API error: ${weatherRes.status}`);
+        }
+
+        if (!airRes.ok) {
+            throw new Error(`Air API error: ${airRes.status}`);
+        }
 
         const weatherData = await weatherRes.json();
         const airData = await airRes.json();
@@ -73,29 +94,50 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const temperature = weatherData.current?.temperature_2m ?? 'N/A';
         const weatherCode = weatherData.current?.weathercode ?? 0;
         const weatherDescriptor = weatherDescriptions[weatherCode] || 'Unknown';
+
         const windSpeed = weatherData.current?.wind_speed_10m ?? 'N/A';
         const windDirection = weatherData.current?.wind_direction_10m ?? 0;
         const windDirectionDescriptor = degreesToCardinal(windDirection);
+
         const humidity = weatherData.current?.relative_humidity_2m ?? 'N/A';
+
         const pm10 = airData?.current?.pm10 ?? 'N/A';
         const pm2_5 = airData?.current?.pm2_5 ?? 'N/A';
 
-        res.status(200).json({
-            ok: true,
-
-            coordinates: { latitude, longitude },
-            temperature,
-            weatherCode,
-            weatherDescriptor,
-            wind: { speed: windSpeed, direction: windDirection, descriptor: windDirectionDescriptor },
-            humidity,
-            pm10,
-            pm2_5,
-        });
+        return NextResponse.json(
+            {
+                ok: true,
+                coordinates: {
+                    latitude,
+                    longitude,
+                },
+                temperature,
+                weatherCode,
+                weatherDescriptor,
+                wind: {
+                    speed: windSpeed,
+                    direction: windDirection,
+                    descriptor: windDirectionDescriptor,
+                },
+                humidity,
+                pm10,
+                pm2_5,
+            },
+            {
+                status: 200,
+                headers: CORS_HEADERS,
+            }
+        );
     } catch (err: any) {
-        res.status(500).json({
-            ok: false,
-            error: err.message,
-        });
+        return NextResponse.json(
+            {
+                ok: false,
+                error: err.message,
+            },
+            {
+                status: 500,
+                headers: CORS_HEADERS,
+            }
+        );
     }
 }
