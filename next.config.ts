@@ -1,6 +1,12 @@
 import type { NextConfig } from 'next';
 
-const routes = ['status', 'discord-status', 'vscode-tweaks/ping', 'vscode-tweaks/weather'];
+const routes = [
+    // this is the only solution for now
+    'status',
+    'status/discord',
+    'vscode-tweaks/ping',
+    'vscode-tweaks/weather',
+];
 
 const nextConfig: NextConfig = {
     async rewrites() {
