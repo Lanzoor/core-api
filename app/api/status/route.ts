@@ -1,16 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const CORS_HEADERS = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-};
+import { CORSHeadersAllowAll, handleOptions, handleErrors } from '@/lib/api';
 
 export async function OPTIONS() {
-    return new NextResponse(null, {
-        status: 200,
-        headers: CORS_HEADERS,
-    });
+    return handleOptions();
 }
 
 export async function GET(req: NextRequest) {
@@ -34,7 +26,7 @@ export async function GET(req: NextRequest) {
 
         const body = {
             ok: true,
-            message: 'Servers online! Pong 🏓',
+            message: 'pong 🏓',
             time: Date.now(),
             lastUpdated: latest?.createdAt ?? null,
             vercelUrl: latest?.url ?? null,
@@ -42,18 +34,9 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json(body, {
             status: 200,
-            headers: CORS_HEADERS,
+            headers: CORSHeadersAllowAll,
         });
     } catch (err: any) {
-        return NextResponse.json(
-            {
-                ok: false,
-                error: err.message,
-            },
-            {
-                status: 500,
-                headers: CORS_HEADERS,
-            }
-        );
+        return handleErrors(err);
     }
 }

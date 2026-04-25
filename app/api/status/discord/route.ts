@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { handleOptions, handleErrors } from '@/lib/api';
 
 const CORS_HEADERS = {
     'Access-Control-Allow-Origin': 'https://www.lanzoor.dev',
@@ -7,10 +8,7 @@ const CORS_HEADERS = {
 };
 
 export async function OPTIONS() {
-    return new NextResponse(null, {
-        status: 200,
-        headers: CORS_HEADERS,
-    });
+    return handleOptions(CORS_HEADERS);
 }
 
 export async function GET(req: NextRequest) {
@@ -43,15 +41,6 @@ export async function GET(req: NextRequest) {
             headers: CORS_HEADERS,
         });
     } catch (err: any) {
-        return NextResponse.json(
-            {
-                ok: false,
-                error: err.message,
-            },
-            {
-                status: 400,
-                headers: CORS_HEADERS,
-            }
-        );
+        return handleErrors(err);
     }
 }

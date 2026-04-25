@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { CORSHeadersAllowAll, handleOptions, handleErrors } from '@/lib/api';
 
-const CORS_HEADERS = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-};
+export async function OPTIONS() {
+    return handleOptions();
+}
 
 async function pingUrl(url: string) {
     try {
@@ -20,13 +19,6 @@ async function pingUrl(url: string) {
     } catch {
         return 'unreachable';
     }
-}
-
-export async function OPTIONS() {
-    return new NextResponse(null, {
-        status: 200,
-        headers: CORS_HEADERS,
-    });
 }
 
 export async function GET(req: NextRequest) {
@@ -49,19 +41,10 @@ export async function GET(req: NextRequest) {
             },
             {
                 status: 200,
-                headers: CORS_HEADERS,
+                headers: CORSHeadersAllowAll,
             }
         );
     } catch (err: any) {
-        return NextResponse.json(
-            {
-                ok: false,
-                error: err.message,
-            },
-            {
-                status: 500,
-                headers: CORS_HEADERS,
-            }
-        );
+        return handleErrors(err);
     }
 }
