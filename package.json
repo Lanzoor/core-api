@@ -2,7 +2,7 @@
     "name": "core-api",
     "version": "26.1.0",
     "private": true,
-    "description": "Repository for my domain lanzoor.dev",
+    "description": "backend repository for api.lanzoor.dev",
     "license": "ISC",
     "author": "Lanzoor",
     "scripts": {
