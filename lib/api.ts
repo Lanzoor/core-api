@@ -19,14 +19,14 @@ export const handleErrors = (error: unknown) => {
 
     if (error instanceof Error) {
         message = error.message;
-        code = error.name || 'ERROR';
+        code = error.name || 'Error';
     } else if (typeof error === 'string') {
         message = error;
     } else if (typeof error === 'object' && error !== null) {
         message = JSON.stringify(error);
     }
 
-    console.error('[API ERROR]', error);
+    console.error('[API Error]\n', error);
 
     return NextResponse.json(
         {

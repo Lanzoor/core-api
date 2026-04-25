@@ -1,0 +1,9 @@
+{
+    "redirects": [
+        {
+            "source": "/api/docs/:path*",
+            "destination": "https://lanzoor.dev/api/docs/:path*",
+            "permanent": true
+        }
+    ]
+}
