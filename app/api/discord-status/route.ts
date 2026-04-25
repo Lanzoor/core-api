@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
             url: req.url,
         });
 
-        const userId = process.env.NEXT_PUBLIC_USER_ID;
+        const userId = process.env.NEXT_PUBLIC_DISCORD_USER_ID;
         const lanyardURL = `https://api.lanyard.rest/v1/users/${userId}`;
 
         console.log(`Fetching from URL ${lanyardURL}`);

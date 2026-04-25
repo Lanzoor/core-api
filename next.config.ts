@@ -4,6 +4,7 @@ const routes = [
     // this is the only solution for now
     'status',
     'status/discord',
+    'discord-status',
     'vscode-tweaks/ping',
     'vscode-tweaks/weather',
 ];
