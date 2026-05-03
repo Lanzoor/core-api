@@ -29,10 +29,9 @@ export default function Page() {
     return (
         <div className="container">
             <nav>
-                <a href="https://api.lanzoor.dev">home</a>
+                <a href="https://lanzoor.dev">home</a>
                 <a href="https://api.lanzoor.dev/status">status</a>
                 <a href="https://api.lanzoor.dev/docs">docs</a>
-                <a href="https://lanzoor.dev">website</a>
             </nav>
 
             <h1>api.lanzoor.dev</h1>
