@@ -1,6 +1,5 @@
 {
     "name": "core-api",
-    "version": "26.1.2",
     "private": true,
     "description": "backend repository for api.lanzoor.dev",
     "license": "ISC",

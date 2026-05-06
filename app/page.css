@@ -10,6 +10,8 @@
 
     --code-bg: #ddd;
     --hr-bg: #ccc;
+
+    --footer-text: #ddd;
 }
 
 [data-theme='dark'] {
@@ -21,6 +23,8 @@
 
     --code-bg: #222;
     --hr-bg: #333;
+
+    --footer-text: #333;
 }
 
 * {
@@ -43,8 +47,8 @@ body {
 }
 
 .container {
-    width: 60%;
-    margin: 5em auto;
+    width: 100%;
+    margin: 10%;
 
     display: flex;
     flex-direction: column;
@@ -156,12 +160,16 @@ button img {
     height: 80%;
 }
 
+footer {
+    opacity: 0.5;
+}
+
 @media (max-width: 1024px) {
     body {
         font-size: 15px;
     }
 
     .container {
-        margin: 2.5em auto;
+        margin: 2%;
     }
 }

@@ -30,6 +30,10 @@ export async function GET(req: NextRequest) {
             time: Date.now(),
             lastUpdated: latest?.createdAt ?? null,
             vercelUrl: latest?.url ?? null,
+            versions: {
+                frontend: 'v26.19.6',
+                backend: 'v26.1.3',
+            },
         };
 
         return NextResponse.json(body, {
