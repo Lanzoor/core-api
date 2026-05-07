@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
             lastUpdated: latest?.createdAt ?? null,
             vercelUrl: latest?.url ?? null,
             versions: {
-                frontend: 'v26.19.6',
+                frontend: 'v26.19.7',
                 backend: 'v26.1.4',
             },
         };
