@@ -66,19 +66,21 @@ export default function Page() {
     );
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const res = await fetch('https://api.lanzoor.dev/status');
-        const data = await res.json();
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const res = await fetch('https://api.lanzoor.dev/status');
+            const data = await res.json();
 
-        const lastUpdated = document.getElementById('footer--last-updated');
-        const frontend = document.getElementById('footer--frontend');
-        const backend = document.getElementById('footer--backend');
+            const lastUpdated = document.getElementById('footer--last-updated');
+            const frontend = document.getElementById('footer--frontend');
+            const backend = document.getElementById('footer--backend');
 
-        if (lastUpdated) lastUpdated.textContent = new Date(data.lastUpdated).toLocaleDateString();
-        if (frontend) frontend.textContent = data.versions.frontend;
-        if (backend) backend.textContent = data.versions.backend;
-    } catch (error) {
-        console.warn('failed to fetch from status:\n\t', error);
-    }
-});
+            if (lastUpdated) lastUpdated.textContent = new Date(data.lastUpdated).toLocaleDateString();
+            if (frontend) frontend.textContent = data.versions.frontend;
+            if (backend) backend.textContent = data.versions.backend;
+        } catch (error) {
+            console.warn('failed to fetch from status:\n\t', error);
+        }
+    });
+}

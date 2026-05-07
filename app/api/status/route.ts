@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
             vercelUrl: latest?.url ?? null,
             versions: {
                 frontend: 'v26.19.6',
-                backend: 'v26.1.3',
+                backend: 'v26.1.4',
             },
         };
 

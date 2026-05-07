@@ -26,7 +26,7 @@ export const handleErrors = (error: unknown) => {
         message = JSON.stringify(error);
     }
 
-    console.error('[API Error]\n', error);
+    console.error('[API Error]\n\t', error);
 
     return NextResponse.json(
         {
