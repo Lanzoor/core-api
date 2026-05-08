@@ -12,24 +12,25 @@ export async function GET(req: NextRequest) {
             url: req.url,
         });
 
-        const projectId = process.env.VERCEL_PROJECT_ID;
-        const token = process.env.VERCEL_TOKEN;
+        // const projectId = process.env.VERCEL_PROJECT_ID;
+        // const token = process.env.VERCEL_TOKEN;
 
-        const response = await fetch(`https://api.vercel.com/v6/deployments?projectId=${projectId}&limit=1`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        // const response = await fetch(`https://api.vercel.com/v6/deployments?projectId=${projectId}&limit=1`, {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`,
+        //     },
+        // });
 
-        const data = await response.json();
-        const latest = data.deployments?.[0];
+        // const data = await response.json();
+        // const latest = data.deployments?.[0];
 
         const body = {
             ok: true,
             message: 'pong 🏓',
             time: Date.now(),
-            lastUpdated: latest?.createdAt ?? null,
-            vercelUrl: latest?.url ?? null,
+            lastUpdated: process.env.VERCEL_GIT_COMMIT_DATE ?? null,
+            // lastUpdated: latest?.createdAt ?? null,
+            // vercelUrl: latest?.url ?? null,
             versions: {
                 frontend: 'v26.19.7.1',
                 backend: 'v26.1.4',
