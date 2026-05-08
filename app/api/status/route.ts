@@ -12,18 +12,6 @@ export async function GET(req: NextRequest) {
             url: req.url,
         });
 
-        // const projectId = process.env.VERCEL_PROJECT_ID;
-        // const token = process.env.VERCEL_TOKEN;
-
-        // const response = await fetch(`https://api.vercel.com/v6/deployments?projectId=${projectId}&limit=1`, {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`,
-        //     },
-        // });
-
-        // const data = await response.json();
-        // const latest = data.deployments?.[0];
-
         const raw = process.env.NEXT_PUBLIC_BUILD_DATE;
         const lastUpdated: number | null = raw ? parseInt(raw) || null : null;
 
@@ -32,8 +20,6 @@ export async function GET(req: NextRequest) {
             message: 'pong 🏓',
             time: Date.now(),
             lastUpdated,
-            // lastUpdated: latest?.createdAt ?? null,
-            // vercelUrl: latest?.url ?? null,
             versions: {
                 frontend: 'v26.19.7.1',
                 backend: 'v26.1.4',
