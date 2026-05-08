@@ -24,11 +24,14 @@ export async function GET(req: NextRequest) {
         // const data = await response.json();
         // const latest = data.deployments?.[0];
 
+        const raw = process.env.NEXT_PUBLIC_BUILD_DATE;
+        const lastUpdated: number | null = raw ? parseInt(raw) || null : null;
+
         const body = {
             ok: true,
             message: 'pong 🏓',
             time: Date.now(),
-            lastUpdated: process.env.NEXT_PUBLIC_BUILD_DATE ?? null,
+            lastUpdated,
             // lastUpdated: latest?.createdAt ?? null,
             // vercelUrl: latest?.url ?? null,
             versions: {
