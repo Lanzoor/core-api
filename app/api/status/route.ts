@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
             ok: true,
             message: 'pong 🏓',
             time: Date.now(),
-            lastUpdated: process.env.VERCEL_GIT_COMMIT_DATE ?? null,
+            lastUpdated: process.env.NEXT_PUBLIC_BUILD_DATE ?? null,
             // lastUpdated: latest?.createdAt ?? null,
             // vercelUrl: latest?.url ?? null,
             versions: {

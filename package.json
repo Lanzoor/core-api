@@ -6,7 +6,7 @@
     "author": "Lanzoor",
     "scripts": {
         "dev": "next dev",
-        "build": "next build",
+        "build": "NEXT_PUBLIC_BUILD_DATE=$(date +%s) next build",
         "start": "next start"
     },
     "dependencies": {
