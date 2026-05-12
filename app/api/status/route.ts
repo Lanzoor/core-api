@@ -21,8 +21,8 @@ export async function GET(req: NextRequest) {
             time: Date.now(),
             lastUpdated,
             versions: {
-                frontend: 'v26.20.3',
-                backend: 'v26.1.6',
+                frontend: 'v26.20.4',
+                backend: 'v26.1.6.1',
             },
         };
 
