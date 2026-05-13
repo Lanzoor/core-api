@@ -21,8 +21,8 @@ export async function GET(req: NextRequest) {
             time: Date.now(),
             lastUpdated,
             versions: {
-                frontend: 'v26.20.4',
-                backend: 'v26.1.6.1',
+                frontend: 'v26.20.5',
+                backend: 'v26.1.7',
             },
         };
 
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
             status: 200,
             headers: CORSHeadersAllowAll,
         });
-    } catch (err: any) {
-        return handleErrors(err);
+    } catch (error: any) {
+        return handleErrors(error);
     }
 }

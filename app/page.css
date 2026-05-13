@@ -1,21 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap');
 
 :root {
-    --bg: #fff;
-    --text: #111;
-
-    --anchor: #777;
-    --anchor-hover: #bbb;
-
-    --code-bg: #ddd;
-    --hr-bg: #ccc;
-
-    --footer-text: #ddd;
-}
-
-[data-theme='dark'] {
-    --bg: #111;
+    --bg: #050505;
     --text: #eee;
 
     --anchor: #bbb;
@@ -34,7 +21,7 @@
 }
 
 body {
-    font-family: 'Geist';
+    font-family: 'JetBrains Mono';
     font-weight: 300;
 
     font-size: 25px;
@@ -123,41 +110,6 @@ hr {
 
     background: var(--hr-bg);
     border: none;
-}
-
-button {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-
-    width: 50px;
-    height: 50px;
-
-    font-family: 'Noto Sans Mono';
-    font-size: 30px;
-
-    background: #333;
-    border: 2px solid #ccc;
-    border-radius: 2147483647px;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-
-    transition: all 0.5s ease;
-}
-
-button:hover {
-    box-shadow: 0 5px 10px black;
-    transform: scale(1.1);
-
-    cursor: pointer;
-}
-
-button img {
-    width: 80%;
-    height: 80%;
 }
 
 footer {

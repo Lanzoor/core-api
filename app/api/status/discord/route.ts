@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
             status: 200,
             headers: CORS_HEADERS,
         });
-    } catch (err: any) {
-        return handleErrors(err);
+    } catch (error: any) {
+        return handleErrors(error);
     }
 }

@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
                 headers: CORSHeadersAllowAll,
             }
         );
-    } catch (err: any) {
-        return handleErrors(err);
+    } catch (error: any) {
+        return handleErrors(error);
     }
 }
