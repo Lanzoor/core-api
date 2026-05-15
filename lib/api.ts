@@ -1,5 +1,10 @@
 import { NextResponse, NextRequest } from 'next/server';
 
+export const versions: Record<any, string> = {
+    frontend: 'v26.20.6',
+    backend: 'v26.1.8',
+};
+
 export const CORSHeadersAllowAll = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',

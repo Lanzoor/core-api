@@ -3,7 +3,8 @@
 
 :root {
     --bg: #050505;
-    --text: #eee;
+    --text: #ddd;
+    --bold-text: #fff;
 
     --anchor: #bbb;
     --anchor-hover: #fff;
@@ -33,9 +34,14 @@ body {
     color: var(--text);
 }
 
+b {
+    font-weight: 600;
+    color: var(--bold-text);
+}
+
 .container {
     width: 100%;
-    margin: 10%;
+    padding: 10%;
 
     display: flex;
     flex-direction: column;

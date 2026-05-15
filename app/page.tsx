@@ -31,11 +31,13 @@ export default function Page() {
                 <h1>api.lanzoor.dev</h1>
                 <hr />
                 <p>
-                    Welcome to <code>api.lanzoor.dev</code>! 👋
+                    <b>
+                        Welcome to <code>api.lanzoor.dev</code>! 👋
+                    </b>
                     <br />
                     This section of the website contains some API function routes that I often use.
                     <br />
-                    Expect things to be more experimental than production-ready.
+                    <i>Expect things to be more experimental than production-ready.</i>
                     <br />
                     <b>Click one of the links above to get started!</b>
                 </p>
