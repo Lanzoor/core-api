@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { versions, CORSHeadersAllowAll, handleOptions, handleErrors } from '@/lib/api';
+import { coreVersions, CORSHeadersAllowAll, handleOptions, handleErrors } from '@/lib/api';
 
 export async function OPTIONS() {
     return handleOptions();
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
             message: 'pong 🏓',
             time: Date.now(),
             lastUpdated,
-            versions,
+            versions: coreVersions,
         };
 
         return NextResponse.json(body, {
