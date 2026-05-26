@@ -2,13 +2,20 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export const coreVersions: Record<any, string> = {
     frontend: 'v26.22.1',
-    backend: 'v26.1.9',
+    backend: 'v26.1.10',
 };
 
 export const CORSHeadersAllowAll = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+export const debugRequest = (request: NextRequest) => {
+    console.log('Ping invoked!', {
+        method: request.method,
+        url: request.url,
+    });
 };
 
 export const handleOptions = (headers: Record<string, string> = CORSHeadersAllowAll) => {

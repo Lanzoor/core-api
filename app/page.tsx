@@ -3,21 +3,15 @@
 import { useState, useEffect } from 'react';
 import './page.css';
 
-type Status = {
-    lastUpdated: string;
-    versions: {
-        frontend: string;
-        backend: string;
-    };
-};
-
 export default function Page() {
-    const [status, setStatus] = useState<Status | null>(null);
+    const [status, setStatus] = useState<any | null>(null);
 
     useEffect(() => {
         fetch('https://api.lanzoor.dev/status')
             .then((res) => res.json())
-            .then((data) => setStatus(data))
+            .then((data) => {
+                setStatus(data);
+            })
             .catch((err) => console.warn('failed to fetch from status:\n\t', err));
     }, []);
     return (

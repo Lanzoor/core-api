@@ -63,6 +63,7 @@ nav {
 }
 
 nav a {
+    position: relative;
     font-family: 'Noto Sans Mono';
     text-decoration: none;
     color: var(--anchor);
@@ -70,7 +71,6 @@ nav a {
 }
 
 nav a:hover {
-    transform: scale(1.1);
     color: var(--anchor-hover);
     text-shadow: 0 0 10px var(--anchor-hover);
 }

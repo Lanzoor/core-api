@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { handleOptions, handleErrors } from '@/lib/api';
+import { handleOptions, handleErrors, debugRequest } from '@/lib/api';
 
 const CORS_HEADERS = {
     'Access-Control-Allow-Origin': 'https://www.lanzoor.dev',
@@ -13,10 +13,7 @@ export async function OPTIONS() {
 
 export async function GET(req: NextRequest) {
     try {
-        console.log('Ping invoked!', {
-            method: req.method,
-            url: req.url,
-        });
+        debugRequest(req);
 
         const userId = process.env.NEXT_PUBLIC_DISCORD_USER_ID;
         const lanyardURL = `https://api.lanyard.rest/v1/users/${userId}`;

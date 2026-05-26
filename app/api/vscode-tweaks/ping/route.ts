@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CORSHeadersAllowAll, handleOptions, handleErrors } from '@/lib/api';
+import { CORSHeadersAllowAll, handleOptions, handleErrors, debugRequest } from '@/lib/api';
 
 export async function OPTIONS() {
     return handleOptions();
@@ -23,10 +23,7 @@ async function pingUrl(url: string) {
 
 export async function GET(req: NextRequest) {
     try {
-        console.log('Ping invoked!', {
-            method: req.method,
-            url: req.url,
-        });
+        debugRequest(req);
 
         const githubPing = await pingUrl('https://github.com');
         const googlePing = await pingUrl('https://google.com');

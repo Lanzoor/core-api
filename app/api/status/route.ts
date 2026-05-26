@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { coreVersions, CORSHeadersAllowAll, handleOptions, handleErrors } from '@/lib/api';
+import { coreVersions, CORSHeadersAllowAll, handleOptions, handleErrors, debugRequest } from '@/lib/api';
 
 export async function OPTIONS() {
     return handleOptions();
@@ -7,10 +7,7 @@ export async function OPTIONS() {
 
 export async function GET(req: NextRequest) {
     try {
-        console.log('Ping invoked!', {
-            method: req.method,
-            url: req.url,
-        });
+        debugRequest(req);
 
         const raw = process.env.NEXT_PUBLIC_BUILD_DATE;
         const lastUpdated: number | null = raw ? parseInt(raw) || null : null;

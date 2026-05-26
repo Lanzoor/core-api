@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CORSHeadersAllowAll, handleOptions, handleErrors } from '@/lib/api';
+import { CORSHeadersAllowAll, handleOptions, handleErrors, debugRequest } from '@/lib/api';
 
 function degreesToCardinal(degrees: number) {
     if (typeof degrees !== 'number' || isNaN(degrees)) {
@@ -51,10 +51,7 @@ export async function OPTIONS() {
 
 export async function GET(req: NextRequest) {
     try {
-        console.log('Weather route invoked!', {
-            method: req.method,
-            url: req.url,
-        });
+        debugRequest(req);
 
         const ipRes = await fetch('http://ip-api.com/json/');
 
