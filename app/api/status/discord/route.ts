@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { handleOptions, handleErrors, debugRequest } from '@/lib/api';
-
-const CORS_HEADERS = {
-    'Access-Control-Allow-Origin': 'https://www.lanzoor.dev',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-};
+import { handleOptions, handleErrors, debugRequest, CORSHeadersAllowAll } from '@/lib/api';
 
 export async function OPTIONS() {
-    return handleOptions(CORS_HEADERS);
+    return handleOptions(CORSHeadersAllowAll);
 }
 
 export async function GET(req: NextRequest) {
@@ -35,7 +29,7 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json(body, {
             status: 200,
-            headers: CORS_HEADERS,
+            headers: CORSHeadersAllowAll,
         });
     } catch (error: any) {
         return handleErrors(error);
