@@ -40,16 +40,9 @@ b {
     color: var(--bold-text);
 }
 
-.container {
+section {
     width: 100%;
     padding: 10%;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-
-    gap: 10px;
 }
 
 nav {
@@ -62,7 +55,7 @@ nav {
     width: 100%;
 }
 
-nav a {
+nav.links a {
     position: relative;
     font-family: 'Noto Sans Mono';
     text-decoration: none;
@@ -70,12 +63,12 @@ nav a {
     transition: all 0.5s ease;
 }
 
-nav a:hover {
+nav.links a:hover {
     color: var(--anchor-hover);
     text-shadow: 0 0 10px var(--anchor-hover);
 }
 
-nav a::after {
+nav.links a::after {
     content: '';
     position: absolute;
     left: 0;
@@ -87,7 +80,7 @@ nav a::after {
     transition: all 0.5s ease-out;
 }
 
-nav a:hover::after {
+nav.links a:hover::after {
     background: var(--anchor-hover);
     width: 100%;
 }
@@ -100,6 +93,15 @@ h5,
 h6 {
     font-family: 'Noto Sans Mono';
     font-weight: 400;
+}
+
+h1.header,
+h2.header,
+h3.header,
+h4.header,
+h5.header,
+h6.header {
+    margin: 10px 0 20px 0;
 }
 
 code {
@@ -123,12 +125,16 @@ footer {
     opacity: 0.5;
 }
 
+blockquote {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px 40px;
+    border-radius: 10px;
+    border-left: 7.5px solid rgba(255, 255, 255, 0.1);
+    margin: 40px 0;
+}
+
 @media (max-width: 1024px) {
     body {
         font-size: 15px;
-    }
-
-    .container {
-        margin: 2%;
     }
 }

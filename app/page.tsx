@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import './page.css';
+import '@/app/styles/main.css';
+import '@/app/styles/frontpage.css';
 
 export default function Page() {
     const [status, setStatus] = useState<any | null>(null);
@@ -16,11 +17,11 @@ export default function Page() {
     }, []);
     return (
         <>
-            <div className="container">
-                <nav>
+            <section>
+                <nav className="links">
                     <a href="https://lanzoor.dev">home</a>
-                    <a href="https://api.lanzoor.dev/status">status</a>
-                    <a href="https://api.lanzoor.dev/docs">docs</a>
+                    <a href="/status">status</a>
+                    <a href="/docs">docs</a>
                 </nav>
                 <h1>api.lanzoor.dev</h1>
                 <hr />
@@ -38,7 +39,7 @@ export default function Page() {
                 <footer>
                     frontend <code>{status?.versions.frontend ?? '...'}</code> | backend <code>{status?.versions.backend ?? '...'}</code>
                 </footer>
-            </div>
+            </section>
         </>
     );
 }
