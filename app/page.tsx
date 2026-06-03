@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Links } from '@/app/components';
+
 import '@/app/styles/main.css';
-import '@/app/styles/frontpage.css';
 
 export default function Page() {
     const [status, setStatus] = useState<any | null>(null);
@@ -18,11 +19,7 @@ export default function Page() {
     return (
         <>
             <section>
-                <nav className="links">
-                    <a href="https://lanzoor.dev">home</a>
-                    <a href="/status">status</a>
-                    <a href="/docs">docs</a>
-                </nav>
+                <Links />
                 <h1>api.lanzoor.dev</h1>
                 <hr />
                 <p>
@@ -33,9 +30,8 @@ export default function Page() {
                     This section of the website contains some API function routes that I often use.
                     <br />
                     <i>Expect things to be more experimental than production-ready.</i>
-                    <br />
-                    <b>Click one of the links above to get started!</b>
                 </p>
+
                 <footer>
                     frontend <code>{status?.versions.frontend ?? '...'}</code> | backend <code>{status?.versions.backend ?? '...'}</code>
                 </footer>

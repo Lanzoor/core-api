@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import NavigationPanel from './components';
+import { NavigationPanel } from '@/app/components';
+
 import '@/app/styles/main.css';
 import '@/app/styles/docs.css';
 
