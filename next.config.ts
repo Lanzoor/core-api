@@ -1,10 +1,11 @@
 import type { NextConfig } from 'next';
 
 const routes = [
-    // this is the only solution for now
+    // TODO: Find a way to make this more automatic
     'status',
     'status/discord',
-    'discord-status',
+    'analytics',
+    'teapot',
     'vscode-tweaks/ping',
     'vscode-tweaks/weather',
 ];
