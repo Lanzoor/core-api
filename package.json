@@ -1,7 +1,7 @@
 {
     "name": "core-api",
     "private": true,
-    "description": "backend repository for api.lanzoor.dev",
+    "description": "backend source code for api.lanzoor.dev",
     "license": "ISC",
     "author": "Lanzoor",
     "scripts": {

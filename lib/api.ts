@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 
 export const coreVersions: Record<any, string> = {
-    frontend: 'v26.22.4',
+    frontend: 'v26.23.0',
     backend: 'v26.1.11',
 };
 
@@ -27,7 +27,7 @@ export const handleOptions = (headers: Record<string, string> = CORSHeadersAllow
 
 export const handleErrors = (error: unknown) => {
     let message = 'Internal server error';
-    let code = 'UNKNOWN_ERROR';
+    let code = 'Error';
 
     if (error instanceof Error) {
         message = error.message;

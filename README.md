@@ -1,3 +1,3 @@
 # core-api
 
-backend repository for [https://api.lanzoor.dev](api.lanzoor.dev)
+backend source code for <https://api.lanzoor.dev>
