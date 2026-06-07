@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { coreVersions, CORSHeadersAllowAll, handleOptions, handleErrors, debugRequest } from '@/lib/api';
+import { handleOptions, handleErrors, debugRequest, normalizePath } from '@/lib/api';
 import { CoreAnalyticsDB } from '@/lib/db';
 import { rateLimit } from '@/lib/rate-limit';
 import { checkOrigin } from '@/lib/auth/origin-guard';
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
         const clientSecret = req.headers.get('x-client');
         if (clientSecret !== 'lanzoor-web-dev-six-seven') {
-            //asme as here, check main.ts in core/src/main.ts for more info
+            // same as here, check main.ts in core/src/main.ts for more info
             console.log('Limited by client secret');
             return NextResponse.json({ error: 'Unauthorized request' }, { status: 403 });
         }
@@ -34,28 +34,24 @@ export async function POST(req: NextRequest) {
             throw new Error('Invalid path');
         }
 
-        let path = rawPath.trim().split('?')[0].split('#')[0];
-        if (!path.startsWith('/')) path = '/' + path;
+        const path = normalizePath(rawPath);
+        const pathFailConditions = {
+            exceedsLimit: () => path.length > PATH_LENGTH_LIMIT,
+            isTraversal: () => path.includes('..'),
+        };
 
-        try {
-            path = decodeURIComponent(path);
-        } catch {}
-
-        path = path
-            .replace(/\/+/g, '/')
-            .replace(/[^A-Za-z0-9_./-]/g, '')
-            .replace(/\.\./g, '')
-            .replace(/^\.+/, '')
-            .replace(/\/+\./g, '/')
-            .trim();
-
-        if (path.length > PATH_LENGTH_LIMIT || path === '') {
-            throw new Error('Invalid or abnormally long path');
+        if (pathFailConditions.exceedsLimit() || pathFailConditions.isTraversal()) {
+            throw new Error('Invalid path');
         }
 
+        // TODO: Find a way to improve and hopefully remove this
         const lanzoorDevResponse = await fetch(`https://www.lanzoor.dev${path}`);
+        const responseFailConditions = {
+            isNotOk: () => !lanzoorDevResponse.ok,
+            isNotFound: () => lanzoorDevResponse.status === 404,
+        };
 
-        if (lanzoorDevResponse.status === 404 || !lanzoorDevResponse.ok) {
+        if (responseFailConditions.isNotOk() || responseFailConditions.isNotFound()) {
             throw new Error("Invalid path, couldn't find path within lanzoor.dev");
         }
 
@@ -74,37 +70,43 @@ export async function POST(req: NextRequest) {
         const botKeywords = ['bot', 'crawler', 'spider', 'ahrefs', 'semrush', 'googlebot', 'bingbot', 'slurp'];
 
         if (botKeywords.some((keyword) => userAgentLower.includes(keyword)) || userAgent.length >= 400) {
-            throw new Error('Bot detected!!!!11111');
+            throw new Error('The user-agent is likely a bot.');
         }
 
-        const visitorId = req.headers.get('x-visitor-id');
+        const visitorId = req.headers.get('x-visitor-id') ?? '';
+        const visitorIdFailConditions = {
+            isMissing: () => visitorId.trim() === '',
+            hasInvalidFormat: () => !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(visitorId),
+        };
 
-        if (typeof visitorId !== 'string') {
-            throw new Error('Invalid visitor ID');
+        if (visitorIdFailConditions.isMissing() || visitorIdFailConditions.hasInvalidFormat()) {
+            throw new Error('The visitor ID is invalid, or it does not match the format.');
         }
 
-        const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        const rawCountry = req.headers.get('x-vercel-ip-country') ?? '';
+        const countryConditions = {
+            isPresent: () => rawCountry.trim() !== '',
+            matchesFormat: () => /^[A-Z]{2}$/.test(rawCountry.trim().toUpperCase()),
+        };
 
-        if (!UUID_REGEX.test(visitorId)) {
-            throw new Error('Invalid visitor ID');
-        }
-
-        const rawCountry = req.headers.get('x-vercel-ip-country');
-        const country = typeof rawCountry === 'string' && /^[A-Z]{2}$/.test(rawCountry.trim().toUpperCase()) ? rawCountry.trim().toUpperCase() : 'Unknown';
+        const country = countryConditions.isPresent() && countryConditions.matchesFormat() ? rawCountry.trim().toUpperCase() : 'Unknown';
 
         let referrer = 'Unknown';
-        const rawReferrer = req.headers.get('referer');
-        if (rawReferrer) {
-            try {
+
+        try {
+            const rawReferrer = req.headers.get('referer') ?? '';
+
+            if (rawReferrer) {
                 const url = new URL(rawReferrer);
                 referrer = (url.hostname + url.pathname).slice(0, 300);
-            } catch {}
-        }
+            }
+        } catch {}
 
         const timestamp = Date.now();
 
         const args = [path, userAgent, visitorId, country, timestamp, referrer];
         console.log(args);
+
         await CoreAnalyticsDB.execute({
             sql: `
                 INSERT INTO visits (path, useragent, visitorid, country, timestamp, referrer)
