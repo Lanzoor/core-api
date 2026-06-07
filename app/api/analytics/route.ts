@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
         const originError = checkOrigin(req);
         if (originError) return originError;
 
-        const clientSecret = req.headers.get('x-client-secret');
+        const clientSecret = req.headers.get('x-client');
         if (clientSecret !== 'lanzoor-web-dev-six-seven') {
             //asme as here, check main.ts in core/src/main.ts for more info
             console.log('client secret limited');
