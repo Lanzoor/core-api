@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         const clientSecret = req.headers.get('x-client');
         if (clientSecret !== 'lanzoor-web-dev-six-seven') {
             //asme as here, check main.ts in core/src/main.ts for more info
-            console.log('client secret limited');
+            console.log('Limited by client secret');
             return NextResponse.json({ error: 'Unauthorized request' }, { status: 403 });
         }
 
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
 
         path = path
             .replace(/\/+/g, '/')
-            .replace(/[^A-Za-z0-9_/-]/g, '')
+            .replace(/[^A-Za-z0-9_./-]/g, '')
             .replace(/\.\./g, '')
             .replace(/^\.+/, '')
             .replace(/\/+\./g, '/')
@@ -51,6 +51,12 @@ export async function POST(req: NextRequest) {
 
         if (path.length > PATH_LENGTH_LIMIT || path === '') {
             throw new Error('Invalid or abnormally long path');
+        }
+
+        const lanzoorDevResponse = await fetch(`https://www.lanzoor.dev${path}`);
+
+        if (lanzoorDevResponse.status === 404 || !lanzoorDevResponse.ok) {
+            throw new Error("Invalid path, couldn't find path within lanzoor.dev");
         }
 
         let userAgent = (req.headers.get('user-agent') ?? '').trim().slice(0, 500);

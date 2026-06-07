@@ -1,8 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server';
 
 export const coreVersions: Record<any, string> = {
-    frontend: 'v26.23.1',
-    backend: 'v26.1.13',
+    frontend: 'v26.23.2',
+    backend: 'v26.1.14',
 };
 
 export const CORSHeadersAllowAll = {
