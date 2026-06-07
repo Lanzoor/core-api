@@ -33,7 +33,6 @@ export async function POST(req: NextRequest) {
         }
 
         let path = rawPath.trim().split('?')[0].split('#')[0];
-
         if (!path.startsWith('/')) path = '/' + path;
 
         try {
@@ -52,11 +51,22 @@ export async function POST(req: NextRequest) {
             throw new Error('Invalid or abnormally long path');
         }
 
-        const userAgent = (req.headers.get('user-agent') ?? '').toLowerCase();
+        let userAgent = (req.headers.get('user-agent') ?? '').trim().slice(0, 500);
+
+        userAgent = userAgent
+            .replace(/[<>"'\\]/g, '')
+            .replace(/[\x00-\x1F\x7F]/g, '')
+            .trim();
+
+        if (userAgent.length === 0) {
+            userAgent = 'Unknown';
+        }
+
+        const userAgentLower = userAgent.toLowerCase();
         const botKeywords = ['bot', 'crawler', 'spider', 'ahrefs', 'semrush', 'googlebot', 'bingbot', 'slurp'];
 
-        if (botKeywords.some((keyword) => userAgent.includes(keyword)) || userAgent.length >= 400) {
-            throw new Error('Bot detected');
+        if (botKeywords.some((keyword) => userAgentLower.includes(keyword)) || userAgent.length >= 400) {
+            throw new Error('Bot detected!!!!11111');
         }
 
         const rawCountry = req.headers.get('x-vercel-ip-country');
@@ -75,10 +85,10 @@ export async function POST(req: NextRequest) {
 
         await CoreAnalyticsDB.execute({
             sql: `
-                INSERT INTO visits (path, country, timestamp, referrer)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO visits (path, country, timestamp, referrer, useragent)
+                VALUES (?, ?, ?, ?, ?)
             `,
-            args: [path, country, timestamp, referrer],
+            args: [path, country, timestamp, referrer, userAgent],
         });
 
         return NextResponse.json({ success: true });
