@@ -19,7 +19,8 @@ export async function POST(req: NextRequest) {
         if (originError) return originError;
 
         const clientSecret = req.headers.get('x-client-secret');
-        if (clientSecret !== process.env.NEXT_PUBLIC_ANALYTICS_SECRET) {
+        if (clientSecret !== 'lanzoor-web-dev-six-seven') {
+            //asme as here, check main.ts in core/src/main.ts for more info
             return NextResponse.json({ error: 'Unauthorized request' }, { status: 403 });
         }
 
