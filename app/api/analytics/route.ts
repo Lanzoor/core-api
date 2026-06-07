@@ -12,33 +12,34 @@ export async function POST(req: NextRequest) {
     try {
         debugRequest(req);
 
-        const body = await req.json();
+        const rateLimitResponse = await rateLimit(req);
+        if (rateLimitResponse) return rateLimitResponse;
 
         const originError = checkOrigin(req);
-        if (originError) {
-            return originError;
+        if (originError) return originError;
+
+        const clientSecret = req.headers.get('x-client-secret');
+        if (clientSecret !== process.env.NEXT_PUBLIC_ANALYTICS_SECRET) {
+            return NextResponse.json({ error: 'Unauthorized request' }, { status: 403 });
         }
 
-        const rateLimitResponse = await rateLimit(req);
-        if (rateLimitResponse) {
-            return rateLimitResponse;
-        }
+        const body = await req.json();
 
         const PATH_LENGTH_LIMIT = 250;
         const rawPath = body.path;
+
         if (typeof rawPath !== 'string') {
-            throw new Error('Invalid path, excluding from analytics.');
+            throw new Error('Invalid path');
         }
-        let path = rawPath.trim();
-        path = path.split('?')[0].split('#')[0];
-        if (!path.startsWith('/')) {
-            path = '/' + path;
-        }
+
+        let path = rawPath.trim().split('?')[0].split('#')[0];
+
+        if (!path.startsWith('/')) path = '/' + path;
+
         try {
             path = decodeURIComponent(path);
-        } catch {
-            console.warn('Failed to decode URL component, fallback to original string.');
-        }
+        } catch {}
+
         path = path
             .replace(/\/+/g, '/')
             .replace(/[^A-Za-z0-9_/-]/g, '')
@@ -46,84 +47,41 @@ export async function POST(req: NextRequest) {
             .replace(/^\.+/, '')
             .replace(/\/+\./g, '/')
             .trim();
+
         if (path.length > PATH_LENGTH_LIMIT || path === '') {
-            throw new Error('Invalid or abnormally long path, excluding from analytics.');
-        }
-
-        const origin = req.headers.get('origin');
-        const referer = req.headers.get('referer');
-
-        const hostname = origin ? new URL(origin).hostname : referer ? new URL(referer).hostname : '';
-
-        const trustedHostnames = new Set(['lanzoor.dev', 'www.lanzoor.dev']);
-        const isTrustedOrigin = trustedHostnames.has(hostname);
-
-        if (!isTrustedOrigin) {
-            throw new Error('Untrusted origin detected, excluding from analytics.');
+            throw new Error('Invalid or abnormally long path');
         }
 
         const userAgent = (req.headers.get('user-agent') ?? '').toLowerCase();
-        const botKeywords = ['bot', 'crawler', 'spider', 'ahrefs', 'semrush', 'mj12bot', 'rogerbot', 'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandex', 'facebot', 'twitterbot', 'rogerbot', 'applebot', 'linkedinbot'];
+        const botKeywords = ['bot', 'crawler', 'spider', 'ahrefs', 'semrush', 'googlebot', 'bingbot', 'slurp'];
 
-        const isLikelyBotByName = botKeywords.some((keyword) => userAgent.includes(keyword));
-        const isLikelyBotByLength = userAgent.length >= 400;
-
-        if (isLikelyBotByName || isLikelyBotByLength) {
-            throw new Error('The user-agent is likely a bot, excluding from analytics.');
+        if (botKeywords.some((keyword) => userAgent.includes(keyword)) || userAgent.length >= 400) {
+            throw new Error('Bot detected');
         }
 
-        const rawCountry: string | null = req.headers.get('x-vercel-ip-country');
-        let country: string = 'Unknown';
-
-        if (typeof rawCountry === 'string') {
-            const trimmed = rawCountry.trim().toUpperCase();
-
-            if (/^[A-Z]{2}$/.test(trimmed)) {
-                country = trimmed;
-            }
-        }
-
-        // const validCountries = new Set(['US', 'JP', 'KR', 'DE', 'FR' /* ... */]);
-        // if (!validCountries.has(country)) {
-        //     country = 'Unknown';
-        // }
-
-        const rawReferrer = req.headers.get('referer');
+        const rawCountry = req.headers.get('x-vercel-ip-country');
+        const country = typeof rawCountry === 'string' && /^[A-Z]{2}$/.test(rawCountry.trim().toUpperCase()) ? rawCountry.trim().toUpperCase() : 'Unknown';
 
         let referrer = 'Unknown';
-
-        if (typeof rawReferrer === 'string' && rawReferrer.length > 0) {
+        const rawReferrer = req.headers.get('referer');
+        if (rawReferrer) {
             try {
                 const url = new URL(rawReferrer);
-
-                referrer = url.hostname + url.pathname;
-
-                if (referrer.length > PATH_LENGTH_LIMIT) {
-                    referrer = 'Invalid';
-                }
-            } catch {
-                referrer = 'Invalid';
-            }
+                referrer = (url.hostname + url.pathname).slice(0, 300);
+            } catch {}
         }
 
         const timestamp = Date.now();
 
-        const analytics = {
-            path,
-            country,
-            timestamp,
-            referrer,
-        };
-
         await CoreAnalyticsDB.execute({
             sql: `
-        INSERT INTO visits (path, country, timestamp, referrer)
-        VALUES (?, ?, ?, ?)
-    `,
-            args: [analytics.path, analytics.country, analytics.timestamp, analytics.referrer],
+                INSERT INTO visits (path, country, timestamp, referrer)
+                VALUES (?, ?, ?, ?)
+            `,
+            args: [path, country, timestamp, referrer],
         });
 
-        return NextResponse.json(analytics);
+        return NextResponse.json({ success: true });
     } catch (error: any) {
         return handleErrors(error, 204);
     }
