@@ -1,5 +1,4 @@
 'use client';
-
 import { NavigationPanel } from '@/app/components';
 
 import '@/app/styles/main.css';

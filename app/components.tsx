@@ -44,21 +44,7 @@ export function NavigationPanel() {
                         <a href="/docs">Documentation</a>
                     </h3>
 
-                    <div className="nav-group">
-                        <a href="/docs/routes">Routes</a>
-
-                        <div className="nav-children">
-                            <a href="/docs/routes/status">
-                                <code>/status</code>
-                            </a>
-
-                            <div className="nav-children">
-                                <a href="/docs/routes/status/discord">
-                                    <code>/status/discord</code>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="/docs/rate-limit">Rate Limit</a>
                 </nav>
             </nav>
         </>

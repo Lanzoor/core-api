@@ -1,8 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server';
 
 export const coreVersions: Record<any, string> = {
-    frontend: 'v26.23.0',
-    backend: 'v26.1.12',
+    frontend: 'v26.23.1',
+    backend: 'v26.1.13',
 };
 
 export const CORSHeadersAllowAll = {
@@ -25,7 +25,7 @@ export const handleOptions = (headers: Record<string, string> = CORSHeadersAllow
     });
 };
 
-export const handleErrors = (error: unknown) => {
+export const handleErrors = (error: unknown, status: number = 500) => {
     let message = 'Internal server error';
     let code = 'Error';
 
@@ -48,7 +48,7 @@ export const handleErrors = (error: unknown) => {
             timestamp: Date.now(),
         },
         {
-            status: 500,
+            status,
             headers: CORSHeadersAllowAll,
         }
     );

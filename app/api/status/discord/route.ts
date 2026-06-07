@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { handleOptions, handleErrors, debugRequest, CORSHeadersAllowAll } from '@/lib/api';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function OPTIONS() {
     return handleOptions(CORSHeadersAllowAll);
@@ -8,6 +9,11 @@ export async function OPTIONS() {
 export async function GET(req: NextRequest) {
     try {
         debugRequest(req);
+
+        const rateLimitResponse = await rateLimit(req);
+        if (rateLimitResponse) {
+            return rateLimitResponse;
+        }
 
         const userId = process.env.NEXT_PUBLIC_DISCORD_USER_ID;
         const lanyardURL = `https://api.lanyard.rest/v1/users/${userId}`;
