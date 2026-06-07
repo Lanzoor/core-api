@@ -103,13 +103,14 @@ export async function POST(req: NextRequest) {
 
         const timestamp = Date.now();
 
-        console.log([path, country, timestamp, referrer, userAgent]);
+        const args = [path, userAgent, visitorId, country, timestamp, referrer];
+        console.log(args);
         await CoreAnalyticsDB.execute({
             sql: `
                 INSERT INTO visits (path, useragent, visitorid, country, timestamp, referrer)
                 VALUES (?, ?, ?, ?, ?, ?)
             `,
-            args: [path, userAgent, visitorId, country, timestamp, referrer],
+            args: args,
         });
 
         return NextResponse.json({ success: true });
