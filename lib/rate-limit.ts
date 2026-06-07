@@ -37,6 +37,7 @@ export async function rateLimit(req: NextRequest): Promise<NextResponse | null> 
         const { success: successPerMinute, limit, remaining, reset } = await rateLimitPerMinute.limit(`${ip}:per-min`);
 
         if (!successPerMinute) {
+            console.log('rate limited')
             return NextResponse.json(
                 { error: 'Too many requests' },
                 {

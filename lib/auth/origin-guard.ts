@@ -6,6 +6,7 @@ export function checkOrigin(req: NextRequest, allowedOrigins: Set<string> = ALLO
     const origin = req.headers.get('origin');
 
     if (!origin) {
+        console.log('origin limited');
         return NextResponse.json(
             { error: 'Origin header is required' },
             {
@@ -19,6 +20,7 @@ export function checkOrigin(req: NextRequest, allowedOrigins: Set<string> = ALLO
         return null;
     }
 
+    console.log('origin limited');
     return NextResponse.json(
         { error: 'Unauthorized origin' },
         {

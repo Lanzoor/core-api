@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
         const clientSecret = req.headers.get('x-client-secret');
         if (clientSecret !== 'lanzoor-web-dev-six-seven') {
             //asme as here, check main.ts in core/src/main.ts for more info
+            console.log('client secret limited');
             return NextResponse.json({ error: 'Unauthorized request' }, { status: 403 });
         }
 
@@ -84,6 +85,7 @@ export async function POST(req: NextRequest) {
 
         const timestamp = Date.now();
 
+        console.log([path, country, timestamp, referrer, userAgent]);
         await CoreAnalyticsDB.execute({
             sql: `
                 INSERT INTO visits (path, country, timestamp, referrer, useragent)
