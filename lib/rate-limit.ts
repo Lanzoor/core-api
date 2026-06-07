@@ -16,12 +16,33 @@ const rateLimitPerMinute = new Ratelimit({
     analytics: true,
 });
 
+function isValidIp(ip: string): boolean {
+    const ipv4 = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
+
+    const ipv6 = /^([0-9a-fA-F]{1,4}:){2,7}[0-9a-fA-F]{1,4}$/;
+
+    return ipv4.test(ip) || ipv6.test(ip);
+}
+
 function getClientIp(req: NextRequest): string {
-    const forwardedFor = req.headers.get('x-forwarded-for');
-    const realIp = req.headers.get('x-real-ip');
     const vercelIp = req.headers.get('x-vercel-ip');
 
-    return forwardedFor?.split(',')[0]?.trim() || realIp || vercelIp || 'anonymous';
+    if (vercelIp && isValidIp(vercelIp)) {
+        return vercelIp;
+    }
+
+    const forwardedFor = req.headers.get('x-forwarded-for');
+    if (forwardedFor) {
+        const ip = forwardedFor.split(',')[0].trim();
+        if (isValidIp(ip)) return ip;
+    }
+
+    const realIp = req.headers.get('x-real-ip');
+    if (realIp && isValidIp(realIp)) {
+        return realIp;
+    }
+
+    return 'anonymous';
 }
 
 export async function rateLimit(req: NextRequest): Promise<NextResponse | null> {
@@ -37,9 +58,11 @@ export async function rateLimit(req: NextRequest): Promise<NextResponse | null> 
         const { success: successPerMinute, limit, remaining, reset } = await rateLimitPerMinute.limit(`${ip}:per-min`);
 
         if (!successPerMinute) {
-            console.log('rate limited')
             return NextResponse.json(
-                { error: 'Too many requests' },
+                {
+                    error: 'Too many requests in a certain window',
+                    message: "You're being rate limited!\nPlease refer to https://api.lanzoor.dev/docs/rate-limit for more information.",
+                },
                 {
                     status: 429,
                     headers: {

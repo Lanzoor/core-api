@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { handleOptions, handleErrors, debugRequest, normalizePath } from '@/lib/api';
-import { CoreAnalyticsDB } from '@/lib/db';
+import { handleOptions, handleErrors, debugRequest } from '@/lib/api';
+import { CoreDB } from '@/lib/database';
 import { rateLimit } from '@/lib/rate-limit';
+import { normalizeDirectoryPath } from '@/lib/security';
 import { checkOrigin } from '@/lib/auth/origin-guard';
 
 export async function OPTIONS() {
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
             throw new Error('Invalid path');
         }
 
-        const path = normalizePath(rawPath);
+        const path = normalizeDirectoryPath(rawPath);
         const pathFailConditions = {
             exceedsLimit: () => path.length > PATH_LENGTH_LIMIT,
             isTraversal: () => path.includes('..'),
@@ -107,7 +108,7 @@ export async function POST(req: NextRequest) {
         const args = [path, userAgent, visitorId, country, timestamp, referrer];
         console.log(args);
 
-        await CoreAnalyticsDB.execute({
+        await CoreDB.execute({
             sql: `
                 INSERT INTO visits (path, useragent, visitorid, country, timestamp, referrer)
                 VALUES (?, ?, ?, ?, ?, ?)
