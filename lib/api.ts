@@ -8,7 +8,7 @@ export const coreVersions: Record<any, string> = {
 export const CORSHeadersAllowAll = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-Client',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Client, X-Visitor-Id',
 };
 
 export const debugRequest = (request: NextRequest) => {
