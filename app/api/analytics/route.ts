@@ -77,6 +77,18 @@ export async function POST(req: NextRequest) {
             throw new Error('Bot detected!!!!11111');
         }
 
+        const visitorId = req.headers.get('x-visitor-id');
+
+        if (typeof visitorId !== 'string') {
+            throw new Error('Invalid visitor ID');
+        }
+
+        const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+        if (!UUID_REGEX.test(visitorId)) {
+            throw new Error('Invalid visitor ID');
+        }
+
         const rawCountry = req.headers.get('x-vercel-ip-country');
         const country = typeof rawCountry === 'string' && /^[A-Z]{2}$/.test(rawCountry.trim().toUpperCase()) ? rawCountry.trim().toUpperCase() : 'Unknown';
 
@@ -94,10 +106,10 @@ export async function POST(req: NextRequest) {
         console.log([path, country, timestamp, referrer, userAgent]);
         await CoreAnalyticsDB.execute({
             sql: `
-                INSERT INTO visits (path, country, timestamp, referrer, useragent)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO visits (path, useragent, visitorid, country, timestamp, referrer)
+                VALUES (?, ?, ?, ?, ?, ?)
             `,
-            args: [path, country, timestamp, referrer, userAgent],
+            args: [path, userAgent, visitorId, country, timestamp, referrer],
         });
 
         return NextResponse.json({ success: true });
