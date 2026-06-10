@@ -44,6 +44,7 @@ export function NavigationPanel() {
                         <a href="/docs">Documentation</a>
                     </h3>
 
+                    <a href="/docs/changelog">Changelog</a>
                     <a href="/docs/rate-limit">Rate Limit</a>
                 </nav>
             </nav>
