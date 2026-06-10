@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
             return rateLimitResponse;
         }
 
-        const userId = process.env.NEXT_PUBLIC_DISCORD_USER_ID;
+        const userId = '1160164047111606292';
         const lanyardURL = `https://api.lanyard.rest/v1/users/${userId}`;
 
         console.log(`Fetching from URL ${lanyardURL}`);
