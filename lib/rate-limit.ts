@@ -1,27 +1,98 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import { NextRequest, NextResponse } from 'next/server';
+import ipaddr from 'ipaddr.js';
 
 const redis = Redis.fromEnv();
 
-const rateLimitPerSecond = new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(5, '1 s'),
-    analytics: true,
-});
+type RateLimitWindow = {
+    preset: string;
+    key: string;
+    limiter: Ratelimit;
+};
 
-const rateLimitPerMinute = new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(30, '60 s'),
-    analytics: true,
-});
+export namespace rateLimits {
+    export const lenient: RateLimitWindow[] = [
+        {
+            preset: 'lenient',
+            key: 'per-sec',
+            limiter: new Ratelimit({
+                redis,
+                limiter: Ratelimit.slidingWindow(5, '1 s'),
+                analytics: true,
+            }),
+        },
+
+        {
+            preset: 'lenient',
+            key: 'per-min',
+            limiter: new Ratelimit({
+                redis,
+                limiter: Ratelimit.slidingWindow(60, '60 s'),
+                analytics: true,
+            }),
+        },
+    ];
+
+    export const normal: RateLimitWindow[] = [
+        {
+            preset: 'normal',
+            key: 'per-sec',
+            limiter: new Ratelimit({
+                redis,
+                limiter: Ratelimit.slidingWindow(5, '1 s'),
+                analytics: true,
+            }),
+        },
+
+        {
+            preset: 'normal',
+            key: 'per-min',
+            limiter: new Ratelimit({
+                redis,
+                limiter: Ratelimit.slidingWindow(20, '60 s'),
+                analytics: true,
+            }),
+        },
+    ];
+
+    export const strict: RateLimitWindow[] = [
+        {
+            preset: 'strict',
+            key: 'per-sec',
+            limiter: new Ratelimit({
+                redis,
+                limiter: Ratelimit.slidingWindow(2, '1 s'),
+                analytics: true,
+            }),
+        },
+
+        {
+            preset: 'strict',
+            key: 'per-min',
+            limiter: new Ratelimit({
+                redis,
+                limiter: Ratelimit.slidingWindow(10, '60 s'),
+                analytics: true,
+            }),
+        },
+    ];
+
+    export const paranoid: RateLimitWindow[] = [
+        {
+            preset: 'paranoid',
+            key: 'per-min',
+            limiter: new Ratelimit({
+                redis,
+                limiter: Ratelimit.slidingWindow(1, '1 m'),
+                analytics: true,
+            }),
+        },
+    ];
+}
 
 function isValidIp(ip: string): boolean {
-    const ipv4 = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
-
-    const ipv6 = /^([0-9a-fA-F]{1,4}:){2,7}[0-9a-fA-F]{1,4}$/;
-
-    return ipv4.test(ip) || ipv6.test(ip);
+    return ipaddr.isValid(ip);
 }
 
 function getClientIp(req: NextRequest): string {
@@ -42,36 +113,33 @@ function getClientIp(req: NextRequest): string {
         return realIp;
     }
 
-    return 'anonymous';
+    return `anonymous:${crypto.randomUUID()}`;
 }
 
-export async function rateLimit(req: NextRequest): Promise<NextResponse | null> {
+export async function rateLimit(req: NextRequest, limitWindows: RateLimitWindow[]): Promise<NextResponse | null> {
     try {
         const ip = getClientIp(req);
 
-        const { success: successPerSecond } = await rateLimitPerSecond.limit(`${ip}:per-sec`);
+        for (const limitWindow of limitWindows) {
+            const { success, limit, remaining, reset } = await limitWindow.limiter.limit(`${ip}:${limitWindow.key}`);
 
-        if (!successPerSecond) {
-            return NextResponse.json({ error: 'Too many requests (burst limit)' }, { status: 429 });
-        }
-
-        const { success: successPerMinute, limit, remaining, reset } = await rateLimitPerMinute.limit(`${ip}:per-min`);
-
-        if (!successPerMinute) {
-            return NextResponse.json(
-                {
-                    error: 'Too many requests in a certain window',
-                    message: "You're being rate limited!\nPlease refer to https://api.lanzoor.dev/docs/rate-limit for more information.",
-                },
-                {
-                    status: 429,
-                    headers: {
-                        'X-RateLimit-Limit': limit.toString(),
-                        'X-RateLimit-Remaining': remaining.toString(),
-                        'X-RateLimit-Reset': reset.toString(),
+            if (!success) {
+                return NextResponse.json(
+                    {
+                        error: 'Too many requests in a certain window',
+                        message: "You're being rate limited!\nPlease refer to https://api.lanzoor.dev/docs/rate-limit for more information.",
                     },
-                }
-            );
+                    {
+                        status: 429,
+                        headers: {
+                            'X-RateLimit-Preset': limitWindow.key,
+                            'X-RateLimit-Limit': limit.toString(),
+                            'X-RateLimit-Reset': reset.toString(),
+                            'Retry-After': Math.max(0, Math.ceil((reset - Date.now()) / 1000)).toString(),
+                        },
+                    }
+                );
+            }
         }
 
         return null;

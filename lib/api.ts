@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export const coreVersions: Record<any, string> = {
     frontend: 'v26.24.0',
-    backend: 'v26.1.14-1',
+    backend: 'v26.1.15',
 };
 
 export const CORSHeadersAllowAll = {

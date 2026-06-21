@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { handleOptions, handleErrors, debugRequest } from '@/lib/api';
 import { CoreDB } from '@/lib/database';
-import { rateLimit } from '@/lib/rate-limit';
+import { rateLimit, rateLimits } from '@/lib/rate-limit';
 import { normalizeDirectoryPath } from '@/lib/security';
 import { checkOrigin } from '@/lib/auth/origin-guard';
 
@@ -13,7 +13,8 @@ export async function POST(req: NextRequest) {
     try {
         debugRequest(req);
 
-        const rateLimitResponse = await rateLimit(req);
+        const rateLimitResponse = await rateLimit(req, rateLimits.normal);
+
         if (rateLimitResponse) return rateLimitResponse;
 
         const originError = checkOrigin(req);

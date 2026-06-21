@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { coreVersions, CORSHeadersAllowAll, handleOptions, handleErrors, debugRequest } from '@/lib/api';
-import { rateLimit } from '@/lib/rate-limit';
+import { rateLimit, rateLimits } from '@/lib/rate-limit';
 
 export async function OPTIONS() {
     return handleOptions();
@@ -10,7 +10,8 @@ export async function GET(req: NextRequest) {
     try {
         debugRequest(req);
 
-        const rateLimitResponse = await rateLimit(req);
+        const rateLimitResponse = await rateLimit(req, rateLimits.normal);
+
         if (rateLimitResponse) {
             return rateLimitResponse;
         }

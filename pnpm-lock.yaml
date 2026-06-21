@@ -17,6 +17,9 @@ importers:
       '@upstash/redis':
         specifier: ^1.38.0
         version: 1.38.0
+      ipaddr.js:
+        specifier: ^2.4.0
+        version: 2.4.0
       next:
         specifier: 16.2.5
         version: 16.2.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -364,6 +367,10 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
+  ipaddr.js@2.4.0:
+    resolution: {integrity: sha512-9VGk3HGanVE6JoZXHiCpnGy5X0jYDnN4EA4lntFPj+1vIWlFhIylq2CrrCOJH9EAhc5CYhq18F2Av2tgoAPsYQ==}
+    engines: {node: '>= 10'}
+
   js-base64@3.7.8:
     resolution: {integrity: sha512-hNngCeKxIUQiEUN3GPJOkz4wF/YvdUdbNL9hsBcMQTkKzboD7T/q3OYOuuPZLUE6dBxSGpwhk5mwuDud7JVAow==}
 
@@ -707,6 +714,8 @@ snapshots:
 
   detect-libc@2.1.2:
     optional: true
+
+  ipaddr.js@2.4.0: {}
 
   js-base64@3.7.8: {}
 

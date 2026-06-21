@@ -10,7 +10,7 @@
     --anchor-hover: #fff;
 
     --code-bg: #222;
-    --hr-bg: #333;
+    --hr-bg: rgba(255, 255, 255, 0.25);
 
     --footer-text: #333;
 }
@@ -45,15 +45,24 @@ section {
     padding: 10%;
 }
 
+main section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    gap: 1em;
+}
+
 nav.links {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 15px;
+    gap: 0.75em;
 
     width: 100%;
-    margin: 10px 0;
+    margin: 0.5em 0;
 }
 
 a {
@@ -103,15 +112,6 @@ h6 {
     font-weight: 400;
 }
 
-h1.header,
-h2.header,
-h3.header,
-h4.header,
-h5.header,
-h6.header {
-    margin: 10px 0 20px 0;
-}
-
 code {
     background: var(--code-bg);
     padding: 2px;
@@ -124,10 +124,10 @@ code {
 hr {
     width: 100%;
     height: 4px;
+    align-self: stretch;
 
     background: var(--hr-bg);
     border: none;
-    margin: 20px 0;
 }
 
 footer {
@@ -139,18 +139,13 @@ blockquote {
     padding: 1em 2em;
     border-radius: 1em;
     border-left: 7.5px solid rgba(255, 255, 255, 0.1);
-    margin: 2em 0;
-}
-
-table {
-    margin: 40px 20px;
 }
 
 th,
 td {
     border: 2px solid rgba(255, 255, 255, 0.25);
     margin: 1px;
-    padding: 20px;
+    padding: 1em;
 }
 
 th {
@@ -158,16 +153,28 @@ th {
 }
 
 ul {
-    padding: 20px;
-    padding-left: 40px;
+    padding: 1em;
+    padding-left: 2em;
 
     margin: 20px 0;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 20px;
 }
 
+ul li {
+    margin: 0.5em 0;
+}
+
 .dim {
     opacity: 0.7;
+}
+
+.codeblock {
+    background: #151515;
+    border: 2px solid #222;
+    align-self: stretch;
+    padding: 1em;
+    border-radius: 1em;
 }
 
 @media (max-width: 1024px) {

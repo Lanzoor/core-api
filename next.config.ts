@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 
 const routes = [
     // TODO: Find a way to make this more automatic
+    // TODO: PLEASE HIJDSHIFOGBOIUWRE OIUWREOTIUHWROITHOIWUH
     'status',
     'status/discord',
     'analytics',

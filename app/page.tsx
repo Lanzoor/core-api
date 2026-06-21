@@ -18,24 +18,29 @@ export default function Page() {
     }, []);
     return (
         <>
-            <section>
-                <Links />
-                <h1>api.lanzoor.dev</h1>
-                <hr />
-                <p>
-                    <b>
-                        Welcome to <code>api.lanzoor.dev</code>! 👋
-                    </b>
-                    <br />
-                    This section of the website contains some API function routes that I often use.
-                    <br />
-                    <i>Expect things to be more experimental than production-ready.</i>
-                </p>
+            <main>
+                <section>
+                    <Links />
 
-                <footer>
-                    frontend <code>{status?.versions.frontend ?? '...'}</code> | backend <code>{status?.versions.backend ?? '...'}</code>
-                </footer>
-            </section>
+                    <h1>api.lanzoor.dev</h1>
+
+                    <hr />
+
+                    <p>
+                        <b>
+                            Welcome to <code>api.lanzoor.dev</code>! 👋
+                        </b>
+                        <br />
+                        This section of the website contains some API function routes that I often use.
+                        <br />
+                        <i>Expect things to be more experimental than production-ready.</i>
+                    </p>
+
+                    <footer>
+                        frontend <code>{status?.versions.frontend ?? '...'}</code> | backend <code>{status?.versions.backend ?? '...'}</code>
+                    </footer>
+                </section>
+            </main>
         </>
     );
 }
