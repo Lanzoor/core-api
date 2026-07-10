@@ -9,7 +9,7 @@ export default function Page() {
     const [status, setStatus] = useState<any | null>(null);
 
     useEffect(() => {
-        fetch('https://api.lanzoor.dev/status')
+        fetch('/status')
             .then((res) => res.json())
             .then((data) => {
                 setStatus(data);
@@ -31,13 +31,15 @@ export default function Page() {
                             Welcome to <code>api.lanzoor.dev</code>! 👋
                         </b>
                         <br />
-                        This section of the website contains some API function routes that I often use.
+                        This section of the website contains some API function routes that I often
+                        use.
                         <br />
                         <i>Expect things to be more experimental than production-ready.</i>
                     </p>
 
                     <footer>
-                        frontend <code>{status?.versions.frontend ?? '...'}</code> | backend <code>{status?.versions.backend ?? '...'}</code>
+                        frontend <code>{status?.data.versions.frontend ?? '...'}</code> | backend{' '}
+                        <code>{status?.data.versions.backend ?? '...'}</code>
                     </footer>
                 </section>
             </main>

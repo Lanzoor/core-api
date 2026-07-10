@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { handleOptions, handleErrors, debugRequest, CORSHeadersAllowAll } from '@/lib/api';
+import { corsJson, corsResponse, debugRequest, handleErrors } from '@/lib/api';
 import { rateLimit, rateLimits } from '@/lib/rate-limit';
 
 export async function OPTIONS() {
-    return handleOptions(CORSHeadersAllowAll);
+    return corsResponse(null, { status: 204 });
 }
 
 export async function GET(req: NextRequest) {
@@ -29,15 +29,11 @@ export async function GET(req: NextRequest) {
         }
 
         const body = {
-            ok: true,
             time: Date.now(),
             data: data.data,
         };
 
-        return NextResponse.json(body, {
-            status: 200,
-            headers: CORSHeadersAllowAll,
-        });
+        return corsJson({ success: true, data: body }, { status: 200 });
     } catch (error: any) {
         return handleErrors(error);
     }

@@ -4,7 +4,7 @@ import { NavigationPanel } from '@/app/components';
 import '@/app/styles/main.css';
 import '@/app/styles/docs.css';
 
-export default function RateLimitPage() {
+export default function Page() {
     return (
         <>
             <NavigationPanel />
@@ -16,13 +16,11 @@ export default function RateLimitPage() {
                     <p>This page contains a list of all changes and updates made to the API.</p>
 
                     <blockquote>
-                        <code>https://www.lanzoor.dev/projects/core-api/changelog</code> redirects here.
+                        <code>https://www.lanzoor.dev/projects/core-api/changelog</code> redirects
+                        here.
                         <br />
                         For the version naming conventions, please check{' '}
-                        <a
-                            href="https://www.lanzoor.dev/docs/conventions/versions"
-                            target="_blank"
-                        >
+                        <a href="https://www.lanzoor.dev/docs/conventions/versions" target="_blank">
                             this document
                         </a>
                         .
@@ -38,6 +36,33 @@ export default function RateLimitPage() {
                     </blockquote>
                     <hr />
 
+                    <h1 id="v26-1-15">Major API update v26.2.0</h1>
+
+                    <p className="dim">
+                        Release date: <b>July 10th, 2026</b>
+                    </p>
+
+                    <h2>API</h2>
+
+                    <ul>
+                        <li>
+                            ~ <b>Completely reworked the headers & data system.</b> Please refer to{' '}
+                            <a href="/docs/status">/docs/status</a> for the new changes, and adjust
+                            your scripts accordingly.
+                        </li>
+                    </ul>
+
+                    <h2>Webpage</h2>
+
+                    <ul>
+                        <li>+ Added style definitions for several elements.</li>
+                        <li>
+                            ~ Improved style definitions for <code>ul</code>,{' '}
+                            <code>blockquote</code> and <code>section</code> elements.
+                        </li>
+                        <li>~ Updated existing documentation to match the new changes.</li>
+                    </ul>
+
                     <h1 id="v26-1-15">Major update v26.1.15</h1>
 
                     <p className="dim">
@@ -48,7 +73,9 @@ export default function RateLimitPage() {
 
                     <ul>
                         <li>
-                            ~ <b>Completely reworked the rate limit system.</b> Please refer to <a href="/docs/rate-limit">/docs/rate-limit</a> for the new changes, and adjust your scripts accordingly.
+                            ~ <b>Completely reworked the rate limit system.</b> Please refer to{' '}
+                            <a href="/docs/rate-limit">/docs/rate-limit</a> for the new changes, and
+                            adjust your scripts accordingly.
                         </li>
                     </ul>
 
@@ -57,7 +84,10 @@ export default function RateLimitPage() {
                     <ul>
                         <li>+ Added style definitions for codeblock elements.</li>
                         <li>~ Updated rate limit documentation to match the new changes.</li>
-                        <li>~ Improved style definitions for margins, and let the container automatically do the job.</li>
+                        <li>
+                            ~ Improved style definitions for margins, and let the container
+                            automatically do the job.
+                        </li>
                     </ul>
 
                     <h1 id="v26-1-14-1">Minor update v26.1.14-1</h1>

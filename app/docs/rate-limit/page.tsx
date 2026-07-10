@@ -4,7 +4,7 @@ import { NavigationPanel } from '@/app/components';
 import '@/app/styles/main.css';
 import '@/app/styles/docs.css';
 
-export default function RateLimitPage() {
+export default function Page() {
     return (
         <>
             <NavigationPanel />
@@ -14,11 +14,14 @@ export default function RateLimitPage() {
                     <h1>Rate Limiting</h1>
 
                     <p className="dim">
-                        Last updated @ <b>June 21st, 2026</b>
+                        Last updated @ <b>July 10th, 2026</b>
                     </p>
 
                     <p>
-                        <code>api.lanzoor.dev</code> is protected by a multi-layer rate limiting system powered by <code>@upstash/ratelimit</code>. This helps prevent abuse and ensures service stability. <b>Please respect the rate limits below to avoid getting blocked.</b>
+                        <code>api.lanzoor.dev</code> is protected by a multi-layer rate limiting
+                        system powered by <code>@upstash/ratelimit</code>. This helps prevent abuse
+                        and ensures service stability.{' '}
+                        <b>Please respect the rate limits below to avoid getting blocked.</b>
                     </p>
 
                     <h2>About Multi-Layered Rate Limits</h2>
@@ -29,7 +32,8 @@ export default function RateLimitPage() {
 
                     <ul>
                         <li>
-                            <b>per second</b> - Prevents rapid burst attacks and aggressive scripting.
+                            <b>per second</b> - Prevents rapid burst attacks and aggressive
+                            scripting.
                         </li>
                         <li>
                             <b>per minute</b> - Prevents sustained spam and overuse.
@@ -110,46 +114,58 @@ export default function RateLimitPage() {
                     <h2>Custom Rate Limits</h2>
 
                     <p>
-                        <b>Some routes may use a custom rate limit preset.</b>
-                        If so, it will be clearly listed in the route's documentation, and the preset identifier <code>custom</code> will be used.
+                        <b>Some routes may use a custom rate limit preset.</b> If so, it will be
+                        clearly listed in the route's documentation, and the preset identifier{' '}
+                        <code>custom</code> shall be used.
                     </p>
 
                     <h2 id="headers">Headers</h2>
 
                     <p>
-                        <i>For now,</i> rate limit headers are only included when a request is rejected with HTTP 429.
+                        <i>For now,</i> rate limit headers are only included when a request is
+                        rejected with HTTP 429.
                     </p>
 
                     <ul>
                         <li>
-                            <code>X-RateLimit-Preset</code>: The rate limit preset that applied to your request. (e.g: <code>normal</code>, <code>paranoid</code>, <code>custom</code>)
+                            <code>X-RateLimit-Preset</code>: The rate limit preset that applied to
+                            your request. (e.g: <code>normal</code>, <code>paranoid</code>,{' '}
+                            <code>custom</code>)
                         </li>
                         <li>
-                            <code>X-RateLimit-Limit</code>: Represents the maximum number of requests allowed within the window.
+                            <code>X-RateLimit-Limit</code>: Represents the maximum number of
+                            requests allowed within the window.
                         </li>
                         <li>
-                            <code>X-RateLimit-Reset</code>: Represents the Unix timestamp in milliseconds when the limits are reset.
+                            <code>X-RateLimit-Reset</code>: Represents the Unix timestamp in
+                            milliseconds when the limits are reset.
                         </li>
                         <li>
-                            <code>Retry-After</code>: Represents how many <i>seconds</i> remain until the rate limit resets.
+                            <code>Retry-After</code>: Represents how many <i>seconds</i> remain
+                            until the rate limit resets.
                         </li>
                     </ul>
 
                     <h2>Example</h2>
 
-                    <p>Here's a simple example of how a rate limit and its headers would look like:</p>
+                    <p>
+                        Here's a simple example of how a rate limit and its headers would look like:
+                    </p>
 
                     <div className="codeblock">
                         HTTP/1.1 429 Too Many Requests
                         <br />
                         <br />
-                        X-RateLimit-Preset: normal
+                        <span className="key">X-RateLimit-Preset</span>:{' '}
+                        <span className="value">normal</span>
                         <br />
-                        X-RateLimit-Limit: 20
+                        <span className="key">X-RateLimit-Limit</span>:{' '}
+                        <span className="value">20</span>
                         <br />
-                        X-RateLimit-Reset: 1782012345678
+                        <span className="key">X-RateLimit-Reset</span>:{' '}
+                        <span className="value">1782012345678</span>
                         <br />
-                        Retry-After: 34
+                        <span className="key">Retry-After</span>: <span className="value">34</span>
                     </div>
 
                     <h2>Reference</h2>

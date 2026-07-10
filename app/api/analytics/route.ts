@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { handleOptions, handleErrors, debugRequest } from '@/lib/api';
+import { debugRequest, corsResponse, corsJson } from '@/lib/api';
 import { CoreDB } from '@/lib/database';
 import { rateLimit, rateLimits } from '@/lib/rate-limit';
 import { normalizeDirectoryPath } from '@/lib/security';
 import { checkOrigin } from '@/lib/auth/origin-guard';
 
+const HEADERS = {
+    'Access-Control-Allow-Origin': 'https://www.lanzoor.dev',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Visitor-Id, X-Client',
+} satisfies HeadersInit;
+
 export async function OPTIONS() {
-    return handleOptions();
+    return corsResponse(null, { status: 204 }, HEADERS);
 }
 
 export async function POST(req: NextRequest) {
@@ -24,7 +30,7 @@ export async function POST(req: NextRequest) {
         if (clientSecret !== 'lanzoor-web-dev-six-seven') {
             // same as here, check main.ts in core/src/main.ts for more info
             console.log('Limited by client secret');
-            return NextResponse.json({ error: 'Unauthorized request' }, { status: 403 });
+            return corsJson({ error: 'Unauthorized request' }, { status: 403 }, HEADERS);
         }
 
         const body = await req.json();
@@ -69,16 +75,31 @@ export async function POST(req: NextRequest) {
         }
 
         const userAgentLower = userAgent.toLowerCase();
-        const botKeywords = ['bot', 'crawler', 'spider', 'ahrefs', 'semrush', 'googlebot', 'bingbot', 'slurp'];
+        const botKeywords = [
+            'bot',
+            'crawler',
+            'spider',
+            'ahrefs',
+            'semrush',
+            'googlebot',
+            'bingbot',
+            'slurp',
+        ];
 
-        if (botKeywords.some((keyword) => userAgentLower.includes(keyword)) || userAgent.length >= 400) {
+        if (
+            botKeywords.some((keyword) => userAgentLower.includes(keyword)) ||
+            userAgent.length >= 400
+        ) {
             throw new Error('The user-agent is likely a bot.');
         }
 
         const visitorId = req.headers.get('x-visitor-id') ?? '';
         const visitorIdFailConditions = {
             isMissing: () => visitorId.trim() === '',
-            hasInvalidFormat: () => !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(visitorId),
+            hasInvalidFormat: () =>
+                !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+                    visitorId
+                ),
         };
 
         if (visitorIdFailConditions.isMissing() || visitorIdFailConditions.hasInvalidFormat()) {
@@ -91,7 +112,10 @@ export async function POST(req: NextRequest) {
             matchesFormat: () => /^[A-Z]{2}$/.test(rawCountry.trim().toUpperCase()),
         };
 
-        const country = countryConditions.isPresent() && countryConditions.matchesFormat() ? rawCountry.trim().toUpperCase() : 'Unknown';
+        const country =
+            countryConditions.isPresent() && countryConditions.matchesFormat()
+                ? rawCountry.trim().toUpperCase()
+                : 'Unknown';
 
         let referrer = 'Unknown';
 
@@ -117,8 +141,12 @@ export async function POST(req: NextRequest) {
             args: args,
         });
 
-        return NextResponse.json({ success: true });
+        return corsJson({ success: true }, { status: 200 });
     } catch (error: any) {
-        return handleErrors(error, 204);
+        return corsJson(
+            { error: `Unauthorized request: ${error.message}` },
+            { status: 403 },
+            HEADERS
+        );
     }
 }

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CORSHeadersAllowAll, handleOptions, handleErrors, debugRequest } from '@/lib/api';
+import { corsJson, corsResponse, debugRequest, handleErrors } from '@/lib/api';
 import { rateLimit, rateLimits } from '@/lib/rate-limit';
 
 export async function OPTIONS() {
-    return handleOptions();
+    return corsResponse(null, { status: 204 });
 }
 
 export async function GET(req: NextRequest) {
@@ -16,14 +16,13 @@ export async function GET(req: NextRequest) {
             return rateLimitResponse;
         }
 
-        return NextResponse.json(
+        return corsJson(
             {
-                ok: true,
-                message: 'I am permanently a teapot. I refuse to brew coffee.',
+                success: true,
+                data: { message: 'I am permanently a teapot. I refuse to brew coffee.' },
             },
             {
                 status: 418,
-                headers: CORSHeadersAllowAll,
             }
         );
     } catch (error: any) {

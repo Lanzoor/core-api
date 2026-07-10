@@ -48,7 +48,7 @@ section {
 main section {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: flex-start;
 
     gap: 1em;
@@ -137,7 +137,6 @@ footer {
 blockquote {
     background: rgba(255, 255, 255, 0.05);
     padding: 1em 2em;
-    border-radius: 1em;
     border-left: 7.5px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -153,16 +152,12 @@ th {
 }
 
 ul {
-    padding: 1em;
-    padding-left: 2em;
-
     margin: 20px 0;
-    background: rgba(255, 255, 255, 0.05);
     border-radius: 20px;
 }
 
 ul li {
-    margin: 0.5em 0;
+    margin: 1em 0;
 }
 
 .dim {
@@ -175,6 +170,22 @@ ul li {
     align-self: stretch;
     padding: 1em;
     border-radius: 1em;
+}
+
+.key {
+    color: #a0ff88;
+}
+
+.value {
+    color: #ffca8e;
+}
+
+.type {
+    color: #aee8ff;
+}
+
+.indent {
+    padding-left: 2em;
 }
 
 @media (max-width: 1024px) {

@@ -2,6 +2,7 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import { NextRequest, NextResponse } from 'next/server';
 import ipaddr from 'ipaddr.js';
+import { corsJson } from './api';
 
 const redis = Redis.fromEnv();
 
@@ -116,18 +117,27 @@ function getClientIp(req: NextRequest): string {
     return `anonymous:${crypto.randomUUID()}`;
 }
 
-export async function rateLimit(req: NextRequest, limitWindows: RateLimitWindow[]): Promise<NextResponse | null> {
+export async function rateLimit(
+    req: NextRequest,
+    limitWindows: RateLimitWindow[]
+): Promise<NextResponse | null> {
     try {
         const ip = getClientIp(req);
 
         for (const limitWindow of limitWindows) {
-            const { success, limit, remaining, reset } = await limitWindow.limiter.limit(`${ip}:${limitWindow.key}`);
+            const { success, limit, remaining, reset } = await limitWindow.limiter.limit(
+                `${ip}:${limitWindow.key}`
+            );
 
             if (!success) {
-                return NextResponse.json(
+                return corsJson(
                     {
-                        error: 'Too many requests in a certain window',
-                        message: "You're being rate limited!\nPlease refer to https://api.lanzoor.dev/docs/rate-limit for more information.",
+                        success: false,
+                        body: {
+                            error: 'Too many requests in a certain window',
+                            message:
+                                "You're being rate limited!\nPlease refer to https://api.lanzoor.dev/docs/rate-limit for more information.",
+                        },
                     },
                     {
                         status: 429,
@@ -135,7 +145,10 @@ export async function rateLimit(req: NextRequest, limitWindows: RateLimitWindow[
                             'X-RateLimit-Preset': limitWindow.key,
                             'X-RateLimit-Limit': limit.toString(),
                             'X-RateLimit-Reset': reset.toString(),
-                            'Retry-After': Math.max(0, Math.ceil((reset - Date.now()) / 1000)).toString(),
+                            'Retry-After': Math.max(
+                                0,
+                                Math.ceil((reset - Date.now()) / 1000)
+                            ).toString(),
                         },
                     }
                 );
