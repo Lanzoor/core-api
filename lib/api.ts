@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 
 export const coreVersions: Record<any, string> = {
-    frontend: 'v26.27.0',
+    frontend: 'v26.27.1',
     backend: 'v26.2.0',
     profile: 'v26.0.1',
 };
