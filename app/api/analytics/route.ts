@@ -55,11 +55,10 @@ export async function POST(req: NextRequest) {
         // TODO: Find a way to improve and hopefully remove this
         const lanzoorDevResponse = await fetch(`https://www.lanzoor.dev${path}`);
         const responseFailConditions = {
-            isNotOk: () => !lanzoorDevResponse.ok,
             isNotFound: () => lanzoorDevResponse.status === 404,
         };
 
-        if (responseFailConditions.isNotOk() || responseFailConditions.isNotFound()) {
+        if (responseFailConditions.isNotFound()) {
             throw new Error("Invalid path, couldn't find path within lanzoor.dev");
         }
 
